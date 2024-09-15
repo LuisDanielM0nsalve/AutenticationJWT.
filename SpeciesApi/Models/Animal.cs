@@ -2,7 +2,7 @@
 
 namespace SpeciesApi.Models
 {
-    public class Animals
+    public class Animal
     {
         public Guid Id { get; set; }
         // Propiedades comunes a todos los animales

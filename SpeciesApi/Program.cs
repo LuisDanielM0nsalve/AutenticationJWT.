@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApiDocumentation", Version = "v1" });
 
     // Configuración para agregar el token JWT
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme    
     {
         Name = "AuthHeader",
         Type = SecuritySchemeType.Http,
@@ -78,6 +78,9 @@ builder.Services.AddScoped<IAquaticRepository, AquaticRepository>();
 builder.Services.AddScoped<ITerrestrialServices, TerrestrialServices>();
 builder.Services.AddScoped<ITerrestrialRepository, TerrestrialRepository>();
 
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+
 
 var app = builder.Build();
 
@@ -89,7 +92,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
+app.UseAuthentication(); //se hace para poder utilizar el token en todos los controladores
 app.UseAuthorization();
 
 app.MapControllers();

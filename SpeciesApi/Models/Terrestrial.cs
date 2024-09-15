@@ -1,6 +1,6 @@
 ﻿namespace SpeciesApi.Models
 {
-    public class Terrestrial : Animals
+    public class Terrestrial : Animal
     {
         public int NumberOfLegs { get; set; }
     }
