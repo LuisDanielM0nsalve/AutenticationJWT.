@@ -21,7 +21,7 @@ namespace SpeciesApi.Services
             return login.Username == "admin" && login.Password == "password";
         }
 
-        public string GenerateJwtToken(string username)
+        public string GenerateJwtToken(string username) 
         {
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor

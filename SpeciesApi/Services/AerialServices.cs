@@ -32,7 +32,6 @@ namespace SpeciesApi.Services
 
         public Aerial GetAerialById(Guid id)
         {
-            // Primero obtenemos la lista de 'Aerials' y luego buscamos el elemento con el ID especificado
             return _aerialRepository.GetAerials()
                                      .FirstOrDefault(a => a.Id == id);
         }
@@ -47,13 +46,13 @@ namespace SpeciesApi.Services
             }
         }
 
-        public Aerial GetAerialByName(string name) // Implementación del nuevo método
+        public Aerial GetAerialByName(string name) 
         {
             return _aerialRepository.GetAerials()
                                     .FirstOrDefault(a => a.Name.ToLower() == name.ToLower());
         }
 
-        public void DeleteAerialByName(string name) // Implementación del nuevo método
+        public void DeleteAerialByName(string name) 
         {
             var aerial = GetAerialByName(name);
             if (aerial != null)

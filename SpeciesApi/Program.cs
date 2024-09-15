@@ -10,12 +10,22 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy.AllowAnyOrigin()   
+                  .AllowAnyMethod()   
+                  .AllowAnyHeader();  
+        });
+});
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApiDocumentation", Version = "v1" });
 
-    // Configuración para agregar el token JWT
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme    
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "AuthHeader",
         Type = SecuritySchemeType.Http,
@@ -41,13 +51,13 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:key"]);  //generacion de la clave
+var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:key"]);
 
-builder.Services.AddAuthentication(options =>     //esquema de autenticacion el cual agrega los servicios necesarios para la autenticacion
+builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>              //Este bloque añade el esquema JWT Bearer, que es el que se utiliza para validar los tokens JWT.
+}).AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
@@ -61,30 +71,20 @@ builder.Services.AddAuthentication(options =>     //esquema de autenticacion el 
     };
 });
 
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAerialServices, AerialService>();
 builder.Services.AddScoped<IAerialRepository, AerialRepository>();
-
 builder.Services.AddScoped<IAquaticServices, AquaticServices>();
 builder.Services.AddScoped<IAquaticRepository, AquaticRepository>();
-
 builder.Services.AddScoped<ITerrestrialServices, TerrestrialServices>();
 builder.Services.AddScoped<ITerrestrialRepository, TerrestrialRepository>();
-
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-
-
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -92,7 +92,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication(); //se hace para poder utilizar el token en todos los controladores
+app.UseCors("AllowAllOrigins");  
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
